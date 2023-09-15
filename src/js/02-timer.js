@@ -2,7 +2,7 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 require("flatpickr/dist/themes/dark.css");
-import Notiflix from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 
 const startBtn = document.querySelector('[data-start]');
@@ -22,8 +22,8 @@ const options = {
 
   onClose(selectedDates) {
     if (selectedDates[0] <= new Date()) {
-      window.alert("Please choose a date in the future");
-startBtn.setAttribute('disabled','true');
+      Notify.warning("Please choose a date in the future");
+      startBtn.setAttribute('disabled','true');
     } else startBtn.removeAttribute('disabled');
   }
 }
@@ -35,15 +35,34 @@ startBtn.addEventListener('click', onStartBtn);
 let timerId = null;
 
 function onStartBtn() {
+
+  if (timerId) {
+    clearInterval(timerId)
+  }
+
   timerId = setInterval(() => {
 
-  }, 1000);
+    const parsedDate = Date.parse(dataInput.value)
+    if (parsedDate) {
+      const difference = parsedDate - new Date().getTime()
+
+      if (difference === 0) {
+        clearInterval(timerId)
+      }
+
+      const toPrint = convertMs(difference);
+
+      daysRef.textContent = addLeadingZero(toPrint.days)
+      hoursRef.textContent = addLeadingZero(toPrint.hours)
+      minutesRef.textContent = addLeadingZero(toPrint.minutes)
+      secondsRef.textContent = addLeadingZero(toPrint.seconds)
+
+    }
+
+  }, 1000)
 }
 
-
-
 function convertMs(ms) {
-
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
@@ -57,6 +76,7 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-console.log(convertMs(2000));
-console.log(convertMs(140000));
-console.log(convertMs(24140000));
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
+}
+
