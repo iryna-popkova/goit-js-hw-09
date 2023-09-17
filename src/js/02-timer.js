@@ -44,9 +44,12 @@ function onStartBtn() {
 
     const parsedDate = Date.parse(dataInput.value)
     if (parsedDate) {
-      const difference = parsedDate - new Date().getTime()
+      const now = new Date()
+      now.setMilliseconds(0)
 
-      if (difference === 0) {
+      const difference = parsedDate - now.getTime()
+
+      if (difference <= 0) {
         clearInterval(timerId)
       }
 

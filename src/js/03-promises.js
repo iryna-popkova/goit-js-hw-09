@@ -29,9 +29,9 @@ function createPromise(position, delay) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (shouldResolve) {
-        resolve("Success! Value passed to resolve function");
+        resolve({position, delay});
       } else {
-        reject("Error! Error passed to reject function");
+        reject({position, delay});
       }
     }, delay);
-  });
+  })};

@@ -10,20 +10,21 @@ const body = document.querySelector('body');
 startButton.addEventListener('click', onStartButton);
 stopButton.addEventListener('click', onStopButton);
 
+stopButton.setAttribute('disabled', 'disabled');
+
 let timerId = null;
 
 function onStartButton(event) {
   timerId = setInterval(colorChange, 1000);
-  startButton.toggleAttribute('disabled')
+  stopButton.removeAttribute('disabled');
+  startButton.setAttribute('disabled', 'disabled');
 };
 
 function onStopButton(event) {
   clearInterval(timerId);
-
-  startButton.removeAttribute('disabled')
+  stopButton.setAttribute('disabled', 'disabled');
+  startButton.removeAttribute('disabled');
 }
-
-
 
 function colorChange() {
   body.style.backgroundColor = getRandomHexColor();
